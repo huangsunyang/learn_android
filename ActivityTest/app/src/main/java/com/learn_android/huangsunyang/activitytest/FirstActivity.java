@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import android.content.Intent;
+import android.util.Log;
 import android.net.Uri;
 
 
@@ -34,6 +35,17 @@ public class FirstActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    String returnedData = data.getStringExtra("data_return");
+                    Log.d("FirstActivity", returnedData);
+                }
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.first_layout);
@@ -42,9 +54,10 @@ public class FirstActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent("com.learn_android.huangsunyang.activitytest.ACTION_START");
-                intent.addCategory("com.learn_android.huangsunyang.activitytest.MY_CATEGORY");
-                startActivity(intent);
+                String data = "Hello SecondActivity";
+                Intent intent = new Intent(FirstActivity.this, SecondActivity.class);
+                intent.putExtra("extra_data", data);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -62,6 +75,16 @@ public class FirstActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("http://www.baidu.com"));
+                startActivity(intent);
+            }
+        });
+
+        Button button4 = (Button) findViewById(R.id.dial);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:10086"));
                 startActivity(intent);
             }
         });
